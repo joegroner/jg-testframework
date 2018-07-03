@@ -34,7 +34,7 @@ namespace JG.TestFramework
         public TestContext TestContext { get; set; }
 
         //[AssemblyInitialize]
-        public static void AssemblyInit(TestContext context)
+        public static void AssemblyInitialize(TestContext context)
         {
             var webDriverType = (string)context.Properties["WebDriver"];
             var baseUrl = (string)context.Properties["BaseUrl"];

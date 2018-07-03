@@ -8,9 +8,9 @@ namespace JG.Demo.CoreTests
     public class DemoTest : JGTest
     {
         [AssemblyInitialize]
-        public static new void AssemblyInit(TestContext context)
+        public static new void AssemblyInitialize(TestContext context)
         {
-            JGTest.AssemblyInit(context);
+            JGTest.AssemblyInitialize(context);
         }
 
         [TestInitialize]
