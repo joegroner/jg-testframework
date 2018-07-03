@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+  
+  <!--<RunConfiguration>
+    <MaxCpuCount>0</MaxCpuCount>
+    <ResultsDirectory>.\TestResults</ResultsDirectory>
+    <TargetPlatform>x64</TargetPlatform>
+    <TargetFrameworkVersion>FrameworkCore21</TargetFrameworkVersion>
+  </RunConfiguration>-->
+
+  <TestRunParameters>
+    <Parameter name="WebDriver" value="chrome" />
+    <Parameter name="BaseUrl" value="https://www.google.com" />
+  </TestRunParameters>
+
+  <MSTestV2>
+    <Parallelize>
+      <Workers>0</Workers>
+      <Scope>MethodLevel</Scope>
+    </Parallelize>
+  </MSTestV2>
+
+</RunSettings>
