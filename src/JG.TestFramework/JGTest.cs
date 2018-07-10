@@ -5,6 +5,7 @@ using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Firefox;
 
 namespace JG.TestFramework
 {
@@ -37,21 +38,32 @@ namespace JG.TestFramework
         public static void AssemblyInitialize(TestContext context)
         {
             var webDriverType = (string)context.Properties["WebDriver"];
+            var executableLocation = (string)context.Properties["ExecutableLocation"];
             var baseUrl = (string)context.Properties["BaseUrl"];
+
+            var workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             switch (webDriverType)
             {
+                case "firefox":
+                    var firefoxOptions = new FirefoxOptions();
+                    firefoxOptions.BrowserExecutableLocation = executableLocation;
+                    firefoxOptions.AddArguments(new string[]
+                    {
+                        "--headless"
+                    });
+                    JGTest.factory = new FirefoxDriverFactory(workingDirectory, firefoxOptions, TimeSpan.FromSeconds(60));
+                    break;
                 case "chrome":
                 default:
-                    var workingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    var options = new ChromeOptions();
-                    options.AddArguments(new string[]
+                    var chromeOptions = new ChromeOptions();
+                    chromeOptions.AddArguments(new string[]
                     {
                         "--no-sandbox",
                         "--headless",
                         "--disable-gpu"
                     });
-                    JGTest.factory = new ChromeDriverFactory(workingDirectory, options, TimeSpan.FromSeconds(60));
+                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeOptions, TimeSpan.FromSeconds(60));
                     break;
             }
 
