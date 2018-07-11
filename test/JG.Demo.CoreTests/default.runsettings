@@ -9,7 +9,7 @@
   </RunConfiguration>-->
 
   <TestRunParameters>
-    <Parameter name="WebDriver" value="firefox" />
+    <Parameter name="WebDriver" value="chrome" />
     <Parameter name="ExecutableLocation" value="C:\Program Files\Mozilla Firefox\firefox.exe" />
     <Parameter name="BaseUrl" value="https://www.google.com" />
   </TestRunParameters>

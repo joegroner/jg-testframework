@@ -13,6 +13,7 @@ namespace JG.TestFramework
     public class JGTest
     {
         private static IWebDriverFactory factory;
+        private static DriverService service;
         private static Uri baseUrl;
         private static ThreadLocal<IWebDriver> driver = new ThreadLocal<IWebDriver>(() => factory.Create());
 
@@ -63,7 +64,10 @@ namespace JG.TestFramework
                         "--headless",
                         "--disable-gpu"
                     });
-                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeOptions, TimeSpan.FromSeconds(60));
+                    var chromeService = ChromeDriverService.CreateDefaultService(workingDirectory);
+                    chromeService.Start();
+                    JGTest.service = chromeService;
+                    JGTest.factory = new ChromeDriverFactory(chromeService, chromeOptions, TimeSpan.FromSeconds(60));
                     break;
             }
 
@@ -85,6 +89,7 @@ namespace JG.TestFramework
         public static void AssemblyCleanup()
         {
             driver.Dispose();
+            if(service !=  null) service.Dispose();
         }
     }
 }
