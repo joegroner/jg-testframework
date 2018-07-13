@@ -14,6 +14,7 @@ namespace JG.Demo.CoreTests
              var homePage = new GoogleHomePage(this.Driver, this.BaseUrl, "/");
             homePage.Navigate();
 
+            System.Threading.Thread.Sleep(10000);
             var displayed = homePage.Doodle.Displayed;
 
             Assert.IsTrue(displayed, "Doodle is not displayed");
@@ -25,6 +26,7 @@ namespace JG.Demo.CoreTests
             var homePage = new GoogleHomePage(this.Driver, this.BaseUrl, "/");
             homePage.Navigate();
 
+            System.Threading.Thread.Sleep(10000);
             var text = homePage.Title;
 
             Assert.AreEqual("Google", text, false);
