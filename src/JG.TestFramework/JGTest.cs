@@ -13,7 +13,7 @@ namespace JG.TestFramework
     public class JGTest
     {
         private static IWebDriverFactory factory;
-        private static DriverService service;
+        //private static DriverService service;
         private static Uri baseUrl;
         private static ThreadLocal<IWebDriver> driver = new ThreadLocal<IWebDriver>(() => factory.Create());
 
@@ -85,10 +85,11 @@ namespace JG.TestFramework
                         "--headless",
                         "--disable-gpu"
                     });
-                    var chromeService = ChromeDriverService.CreateDefaultService(workingDirectory);
-                    chromeService.Start();
-                    JGTest.service = chromeService;
-                    JGTest.factory = new ChromeDriverFactory(chromeService, chromeOptions, TimeSpan.FromSeconds(commandTimeout));
+                    // NOTE: using a single instance of the ChromeDriver does not seem to be working correctly with 2.40.0
+                    //var chromeService = ChromeDriverService.CreateDefaultService(workingDirectory);
+                    //chromeService.Start();
+                    //JGTest.service = chromeService;
+                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeOptions, TimeSpan.FromSeconds(commandTimeout));
                     break;
             }
 
@@ -110,7 +111,7 @@ namespace JG.TestFramework
         public static void AssemblyCleanup()
         {
             driver.Dispose();
-            if(service !=  null) service.Dispose();
+            //if(service !=  null) service.Dispose();
         }
     }
 }
