@@ -29,7 +29,7 @@ steps:
     zipAfterPublish: false
 
 - task: CopyFiles@2
-  displayName: Copy Files to: $(build.artifactstagingdirectory)
+  displayName: Copy Files to artifact staging directory
   inputs:
     SourceFolder: '$(system.defaultworkingdirectory)'
     Contents: '**/bin/$(BuildConfiguration)/**/publish/**'
@@ -37,4 +37,4 @@ steps:
     flattenFolders: true
 
 - task: PublishBuildArtifacts@1
-  displayName: Publish Artifact: drop
+  displayName: Publish artifacts to drop folder
