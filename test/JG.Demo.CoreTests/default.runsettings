@@ -9,10 +9,10 @@
   </RunConfiguration>-->
 
   <TestRunParameters>
-    <Parameter name="WebDriver" value="remotechrome" />
+    <Parameter name="WebDriver" value="chrome" />
     <Parameter name="ExecutableLocation" value="C:\Program Files\Mozilla Firefox\firefox.exe" />
     <Parameter name="BaseUrl" value="https://www.google.com" />
-    <Parameter name="CommandTimeout" value="120" />
+    <Parameter name="CommandTimeout" value="60" />
     <Parameter name="SeleniumHost" value="http://selenium-service:4444/wd/hub" />
   </TestRunParameters>
 

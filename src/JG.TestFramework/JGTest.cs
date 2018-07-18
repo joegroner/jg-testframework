@@ -12,16 +12,46 @@ namespace JG.TestFramework
     [TestClass]
     public class JGTest
     {
+        private class WebDriverWrapper : IDisposable
+        {
+            private IWebDriver wrapped;
+            private IWebDriverFactory factory;
+
+            public WebDriverWrapper(IWebDriverFactory factory)
+            {
+                this.factory = factory ?? throw new ArgumentNullException(nameof(factory));
+            }
+
+            public IWebDriver Wrapped
+            {
+                get
+                {
+                    if (this.wrapped == null)
+                    {
+                        this.wrapped = this.factory.Create();
+                    }
+
+                    return this.wrapped;
+                }
+            }
+
+            public void Dispose()
+            {
+                this.wrapped.Dispose();
+                this.wrapped = null;
+            }
+        }
+
         private static IWebDriverFactory factory;
         //private static DriverService service;
         private static Uri baseUrl;
-        private static ThreadLocal<IWebDriver> driver = new ThreadLocal<IWebDriver>(() => factory.Create());
+        private static ThreadLocal<WebDriverWrapper> driver = new ThreadLocal<WebDriverWrapper>(() => new WebDriverWrapper(factory));
 
         public IWebDriver Driver
         {
             get
             {
-                return JGTest.driver.Value;
+                return JGTest.driver.Value.Wrapped;
             }
         }
 
