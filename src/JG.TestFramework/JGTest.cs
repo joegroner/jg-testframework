@@ -12,7 +12,7 @@ namespace JG.TestFramework
     [TestClass]
     public class JGTest
     {
-        private class WebDriverWrapper : IDisposable
+        private class WebDriverWrapper
         {
             private IWebDriver wrapped;
             private IWebDriverFactory factory;
@@ -35,7 +35,7 @@ namespace JG.TestFramework
                 }
             }
 
-            public void Dispose()
+            public void DisposeWrapped()
             {
                 this.wrapped.Dispose();
                 this.wrapped = null;
@@ -43,7 +43,7 @@ namespace JG.TestFramework
         }
 
         private static IWebDriverFactory factory;
-        //private static DriverService service;
+        private static DriverService service;
         private static Uri baseUrl;
         private static ThreadLocal<WebDriverWrapper> driver = new ThreadLocal<WebDriverWrapper>(() => new WebDriverWrapper(factory));
 
@@ -115,7 +115,7 @@ namespace JG.TestFramework
                         "--headless",
                         "--disable-gpu"
                     });
-                    // NOTE: using a single instance of the ChromeDriver does not seem to be working correctly with 2.40.0
+                    // NOTE: the "single driver" approach does not seem to work with ChromeDriver 2.40.0 on Linux
                     //var chromeService = ChromeDriverService.CreateDefaultService(workingDirectory);
                     //chromeService.Start();
                     //JGTest.service = chromeService;
@@ -134,7 +134,7 @@ namespace JG.TestFramework
         [TestCleanup]
         public virtual void TestCleanup()
         {
-            driver.Value.Dispose();
+            driver.Value.DisposeWrapped();
         }
 
         //[AssemblyCleanup]
