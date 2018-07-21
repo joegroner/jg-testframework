@@ -106,10 +106,28 @@ namespace JG.TestFramework
                     });
                     JGTest.factory = new FirefoxDriverFactory(workingDirectory, firefoxOptions, TimeSpan.FromSeconds(commandTimeout));
                     break;
+                case "chrome-headless":
+                    var chromeHeadlessOptions = new ChromeOptions();
+                    chromeHeadlessOptions.AddArguments(new string[]
+                    {
+                        "--no-sandbox",
+                        "--headless",
+                        "--disabgpu"
+                    });
+                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeHeadlessOptions, TimeSpan.FromSeconds(commandTimeout));
+                    break;
                 case "chrome":
-                default:
                     var chromeOptions = new ChromeOptions();
                     chromeOptions.AddArguments(new string[]
+                    {
+                        "--no-sandbox",
+                        "--disabgpu"
+                    });
+                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeOptions, TimeSpan.FromSeconds(commandTimeout));
+                    break;
+                default:
+                    var defaultchromeHeadlessOptions = new ChromeOptions();
+                    defaultchromeHeadlessOptions.AddArguments(new string[]
                     {
                         "--no-sandbox",
                         "--headless",
@@ -119,7 +137,7 @@ namespace JG.TestFramework
                     //var chromeService = ChromeDriverService.CreateDefaultService(workingDirectory);
                     //chromeService.Start();
                     //JGTest.service = chromeService;
-                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeOptions, TimeSpan.FromSeconds(commandTimeout));
+                    JGTest.factory = new ChromeDriverFactory(workingDirectory, defaultchromeHeadlessOptions, TimeSpan.FromSeconds(commandTimeout));
                     break;
             }
 
