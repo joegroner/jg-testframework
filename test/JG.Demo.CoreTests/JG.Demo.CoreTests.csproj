@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="default.runsettings">
+    <Content Include="chrome.runsettings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
