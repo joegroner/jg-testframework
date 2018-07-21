@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="default.runsettings" />
+    <None Remove="firefox.runsettings" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="firefox.runsettings">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Generator>SettingsSingleFileGenerator</Generator>
+    </Content>
     <Content Include="chrome.runsettings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

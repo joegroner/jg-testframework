@@ -102,9 +102,17 @@ namespace JG.TestFramework
                     firefoxOptions.BrowserExecutableLocation = executableLocation;
                     firefoxOptions.AddArguments(new string[]
                     {
-                        "--headless"
                     });
                     JGTest.factory = new FirefoxDriverFactory(workingDirectory, firefoxOptions, TimeSpan.FromSeconds(commandTimeout));
+                    break;
+                case "firefox-headless":
+                    var firefoxHeadlessOptions = new FirefoxOptions();
+                    firefoxHeadlessOptions.BrowserExecutableLocation = executableLocation;
+                    firefoxHeadlessOptions.AddArguments(new string[]
+                    {
+                        "--headless"
+                    });
+                    JGTest.factory = new FirefoxDriverFactory(workingDirectory, firefoxHeadlessOptions, TimeSpan.FromSeconds(commandTimeout));
                     break;
                 case "chrome-headless":
                     var chromeHeadlessOptions = new ChromeOptions();
