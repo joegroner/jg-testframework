@@ -45,14 +45,17 @@ namespace JG.TestFramework
         private static IWebDriverFactory factory;
         private static DriverService service;
         private static Uri baseUrl;
-        private static ThreadLocal<WebDriverWrapper> driver = new ThreadLocal<WebDriverWrapper>(() => new WebDriverWrapper(factory));
-
+        // private static ThreadLocal<WebDriverWrapper> driver = new ThreadLocal<WebDriverWrapper>(() => new WebDriverWrapper(factory));
+        
+            
+        /// <summary>
+        /// The dictionary property for storing the web driver in the TestContext.
+        /// </summary>
+        private const string WebDriverPropkey = "WEB_DRIVER";
         public IWebDriver Driver
         {
-            get
-            {
-                return JGTest.driver.Value.Wrapped;
-            }
+            get => (IWebDriver)TestContext.Properties[WebDriverPropkey];
+            set => TestContext.Properties[WebDriverPropkey] = value;
         }
 
         public Uri BaseUrl
@@ -65,7 +68,7 @@ namespace JG.TestFramework
 
         public TestContext TestContext { get; set; }
 
-        //[AssemblyInitialize]
+        [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
         {
             var webDriverType = (string)context.Properties["WebDriver"];
@@ -155,18 +158,19 @@ namespace JG.TestFramework
         [TestInitialize]
         public virtual void TestInitialize()
         {
+            TestContext.Properties[WebDriverPropkey] = factory.Create();
         }
 
         [TestCleanup]
         public virtual void TestCleanup()
         {
-            driver.Value.DisposeWrapped();
+            Driver.Dispose();
         }
 
-        //[AssemblyCleanup]
+        [AssemblyCleanup]
         public static void AssemblyCleanup()
         {
-            driver.Dispose();
+            //driver.Dispose();
             //if(service !=  null) service.Dispose();
         }
     }
