@@ -45,14 +45,17 @@ namespace JG.TestFramework
         private static IWebDriverFactory factory;
         private static DriverService service;
         private static Uri baseUrl;
-        private static ThreadLocal<WebDriverWrapper> driver = new ThreadLocal<WebDriverWrapper>(() => new WebDriverWrapper(factory));
-
+        // private static ThreadLocal<WebDriverWrapper> driver = new ThreadLocal<WebDriverWrapper>(() => new WebDriverWrapper(factory));
+        
+            
+        /// <summary>
+        /// The dictionary property for storing the web driver in the TestContext.
+        /// </summary>
+        private const string WebDriverPropkey = "WEB_DRIVER";
         public IWebDriver Driver
         {
-            get
-            {
-                return JGTest.driver.Value.Wrapped;
-            }
+            get => (IWebDriver)TestContext.Properties[WebDriverPropkey];
+            set => TestContext.Properties[WebDriverPropkey] = value;
         }
 
         public Uri BaseUrl
@@ -65,7 +68,7 @@ namespace JG.TestFramework
 
         public TestContext TestContext { get; set; }
 
-        //[AssemblyInitialize]
+        [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
         {
             var webDriverType = (string)context.Properties["WebDriver"];
@@ -102,14 +105,40 @@ namespace JG.TestFramework
                     firefoxOptions.BrowserExecutableLocation = executableLocation;
                     firefoxOptions.AddArguments(new string[]
                     {
-                        "--headless"
                     });
                     JGTest.factory = new FirefoxDriverFactory(workingDirectory, firefoxOptions, TimeSpan.FromSeconds(commandTimeout));
                     break;
+                case "firefox-headless":
+                    var firefoxHeadlessOptions = new FirefoxOptions();
+                    firefoxHeadlessOptions.BrowserExecutableLocation = executableLocation;
+                    firefoxHeadlessOptions.AddArguments(new string[]
+                    {
+                        "--headless"
+                    });
+                    JGTest.factory = new FirefoxDriverFactory(workingDirectory, firefoxHeadlessOptions, TimeSpan.FromSeconds(commandTimeout));
+                    break;
+                case "chrome-headless":
+                    var chromeHeadlessOptions = new ChromeOptions();
+                    chromeHeadlessOptions.AddArguments(new string[]
+                    {
+                        "--no-sandbox",
+                        "--headless",
+                        "--disabgpu"
+                    });
+                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeHeadlessOptions, TimeSpan.FromSeconds(commandTimeout));
+                    break;
                 case "chrome":
-                default:
                     var chromeOptions = new ChromeOptions();
                     chromeOptions.AddArguments(new string[]
+                    {
+                        "--no-sandbox",
+                        "--disabgpu"
+                    });
+                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeOptions, TimeSpan.FromSeconds(commandTimeout));
+                    break;
+                default:
+                    var defaultchromeHeadlessOptions = new ChromeOptions();
+                    defaultchromeHeadlessOptions.AddArguments(new string[]
                     {
                         "--no-sandbox",
                         "--headless",
@@ -119,7 +148,7 @@ namespace JG.TestFramework
                     //var chromeService = ChromeDriverService.CreateDefaultService(workingDirectory);
                     //chromeService.Start();
                     //JGTest.service = chromeService;
-                    JGTest.factory = new ChromeDriverFactory(workingDirectory, chromeOptions, TimeSpan.FromSeconds(commandTimeout));
+                    JGTest.factory = new ChromeDriverFactory(workingDirectory, defaultchromeHeadlessOptions, TimeSpan.FromSeconds(commandTimeout));
                     break;
             }
 
@@ -129,18 +158,19 @@ namespace JG.TestFramework
         [TestInitialize]
         public virtual void TestInitialize()
         {
+            TestContext.Properties[WebDriverPropkey] = factory.Create();
         }
 
         [TestCleanup]
         public virtual void TestCleanup()
         {
-            driver.Value.DisposeWrapped();
+            Driver.Dispose();
         }
 
-        //[AssemblyCleanup]
+        [AssemblyCleanup]
         public static void AssemblyCleanup()
         {
-            driver.Dispose();
+            //driver.Dispose();
             //if(service !=  null) service.Dispose();
         }
     }
